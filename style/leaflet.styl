@@ -1,0 +1,41 @@
+[data-atom=leaflet]
+  position: relative
+  display: block
+  background-color: #CCC
+
+  &.big
+    height: 192px
+  &.small
+    height: 96px
+  &:not(.big):not(.small)
+    height: 128px
+
+
+[data-organism=leaflet]
+  position: relative
+
+  > [data-atom=leaflet]
+    z-index: 0
+    position: absolute
+    width: 100%
+    height: 100% !important
+
+  > [data-atom=button], > [data-molecule=form]
+    z-index: 1
+    position: absolute
+
+  AIR = 0.75rem
+  > [data-atom=button]
+    top: 0
+    margin: AIR
+
+  > [data-molecule=form]
+    bottom: 0
+    padding: AIR
+
+  // &:not(.menu) > [data-atom=button]
+  //   display: none
+
+  // &:not(.form) > [data-molecule=form]
+  //   display: none
+
