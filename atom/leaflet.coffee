@@ -22,6 +22,8 @@ class Atoms.Atom.Leaflet extends Atoms.Class.Atom
   _query    : []
   _route    : null
 
+  _tileUrl  : 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+
   output: ->
     super
     exists = Atoms.$("[data-extension=leaflet]").length > 0
@@ -65,7 +67,7 @@ class Atoms.Atom.Leaflet extends Atoms.Class.Atom
         center: [43.256963, -2.923441]
         zoom: 1
         zoomControl: false
-      tileUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+      tileUrl = @attributes.tile ? @_tileUrl
       tileOptions = 
         attribution: 'Map data &copy;
           <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
