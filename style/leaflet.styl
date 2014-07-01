@@ -4,6 +4,10 @@
   position: relative
   display: block
   background-color: #ddd
+  display-flex()
+  justify-content center
+  align-content center
+  align-items center
 
   &.big
     height: 192px
@@ -11,6 +15,13 @@
     height: 96px
   &:not(.big):not(.small)
     height: 128px
+
+  > .icon
+    display: block
+    font-size: SIZE = 3rem
+    width: SIZE
+    height: SIZE
+    color: WHITE
 
 [data-organism=section][data-extend=leaflet]
   position: relative
