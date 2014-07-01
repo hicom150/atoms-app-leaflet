@@ -11,7 +11,7 @@
 class Atoms.Atom.Leaflet extends Atoms.Class.Atom
 
   @template : """
-    <div id=leaflet {{#if.style}}class="{{style}}"{{/if.style}}></div>"""
+    <div id="{{id}}" {{#if.style}}class="{{style}}"{{/if.style}}></div>"""
 
   @base     : "Leaflet"
 
@@ -20,18 +20,27 @@ class Atoms.Atom.Leaflet extends Atoms.Class.Atom
   _map      : null
   _markers  : []
   _query    : []
-  _route    : null
-
-  _tileUrl  : 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+  _tileUrl  : "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
 
   output: ->
     super
-    exists = Atoms.$("[data-extension=leaflet]").length > 0
-    if exists then do @__init else __loadScript @__init
+    if Atoms.$("[data-extension=leaflet]").length > 0
+      do @__init
+    else
+      url = "http://cdn.leafletjs.com/leaflet-0.7.3/leaflet"
+      Hope.chain([ =>
+        Atoms.resource "leaflet", "link", "#{url}.css"
+      , =>
+        Atoms.resource "leaflet", "script", "#{url}.js"
+      ]).then (error, value) =>
+        unless error
+          do @__init
+        else
+          console.error "Atoms.App.Leaflet error loading resources"
 
   # Methods Instance
   center: (position, zoom_level = 8) ->
-    latLng = L.latLng position.latitude, position.longitude
+    latLng = L?.latLng position.latitude, position.longitude
     @_map.setView latLng, zoom_level
 
   zoom: (level) ->
@@ -46,10 +55,10 @@ class Atoms.Atom.Leaflet extends Atoms.Class.Atom
     true
 
   marker: (position, icon, animate = false) ->
-    latLng = L.latLng position.latitude, position.longitude
-    markerOptions = 
+    latLng = L?.latLng position.latitude, position.longitude
+    markerOptions =
       icon : __markerIcon icon
-    marker = new L.marker latLng, markerOptions
+    marker = new L?.marker latLng, markerOptions
     @_map.addLayer marker
     @_markers.push marker
     true
@@ -57,51 +66,35 @@ class Atoms.Atom.Leaflet extends Atoms.Class.Atom
   clean: ->
     @_map.removeLayer marker for marker in @_markers
     @_markers = []
-    # @_route?.renderer.setMap null
-    # @_route = null
 
   # Privates
   __init: =>
-    setTimeout =>
-      mapOptions = 
-        center: [43.256963, -2.923441]
-        zoom: 1
-        zoomControl: false
-      tileUrl = @attributes.tile ? @_tileUrl
-      tileOptions = 
-        attribution: 'Map data &copy;
-          <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
-      @_map = L.map 'leaflet', mapOptions
-      L.tileLayer(tileUrl, tileOptions).addTo(@_map)
-    , 1000
+    mapOptions =
+      center     : [43.256963, -2.923441]
+      zoom       : 1
+      zoomControl: false
+    tileUrl = @attributes.tile ? @_tileUrl
+    tileOptions =
+      attribution: 'Map data &copy;
+        <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
+    @_map = L?.map @attributes.id, mapOptions
+    L?.tileLayer(tileUrl, tileOptions).addTo(@_map)
+
 
 # ==============================================================================
-
-__loadScript = (callback) ->
-  window.google = maps: {}
-  script = document.createElement("script")
-  script.type = "text/javascript"
-  script.src = "http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"
-  script.setAttribute "data-extension", "leaflet"
-  script.onload = -> callback.call @ if callback?
-  document.body.appendChild script
-
-do __loadScript
-
 __markerIcon = (icon) ->
   if icon
-    iconOptions = 
-      iconUrl: icon.url
-      #iconRetinaUrl: icon.retinaUrl
-      iconSize: [icon.size_x, icon.size_y]
+    iconOptions =
+      iconUrl   : icon.url
+      iconSize  : [icon.size_x, icon.size_y]
       iconAnchor: [icon.anchor_x, icon.anchor_y]
-    L.icon iconOptions
+    L?.icon iconOptions
   else
-    new L.Icon.Default()
+    new L?.Icon.Default()
 
 __queryPlace = (value) ->
   if value.latitude? and value.longitude?
-    value = L.latLng value.latitude, value.longitude
+    value = L?.latLng value.latitude, value.longitude
   else
     value = null
   value
@@ -113,19 +106,10 @@ __parseAddress = (address) ->
     latitude  : address.lat
     longitude : address.lon
 
-# __parseRouteSteps = (instructions) ->
-#   steps = []
-#   for step in instructions.steps
-#     steps.push
-#       distance    : step.distance.text,
-#       duration    : step.duration.text,
-#       instructions: step.instructions
-#   steps
-
 __geocode = (value) ->
   promise = new Hope.Promise()
-
-  $$.ajax
+  ajax = $$.ajax or $.ajax
+  ajax
     url     : "http://nominatim.openstreetmap.org/search"
     data    : {q:value, format:'json'}
     success : (response) =>
@@ -134,4 +118,3 @@ __geocode = (value) ->
       console.error error
       promise.done error, null
   promise
-
