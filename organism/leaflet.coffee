@@ -20,12 +20,13 @@ class Atoms.Organism.Leaflet extends Atoms.Organism.Section
 
   @events   : ["menu"]
 
-  @tile     : "http://{s}.tile.stamen.com/toner/{z}/{x}/{y}.png"
-
   @default  :
     style   : "menu form",
     children: [
-      "Atom.Leaflet": id: "instance", tile: @tile, events: ["query"]
+      "Atom.Leaflet":
+        id    : "instance"
+        tile  : "http://{s}.tile.stamen.com/toner/{z}/{x}/{y}.png"
+        events: ["query"]
     ,
       "Atom.Button": icon: "navicon", style: "small"
     ,
