@@ -8,14 +8,12 @@
   justify-content center
   align-content center
   align-items center
-
   &.big
-    height: 192px
+    height: 12rem
   &.small
-    height: 96px
-  &:not(.big):not(.small)
-    height: 128px
-
+    height: 6rem
+  &:not(.full):not(.big):not(.small)
+    height: 8rem
   > .icon
     display: block
     font-size: SIZE = 3rem
@@ -23,18 +21,18 @@
     height: SIZE
     color: WHITE
 
+[data-atom=leaflet].full, [data-organism=section][data-extend=leaflet] > [data-atom=leaflet]
+  position: absolute !important
+  width: 100% !important
+  height: 100% !important
+
 [data-organism=section][data-extend=leaflet]
   position: relative
   > [data-atom=leaflet]
     z-index: 0
-    position: absolute
-    width: 100%
-    height: 100% !important
-
   > [data-atom=button], > [data-molecule=form]
     z-index: 1
     position: absolute
-
   AIR = 0.75rem
   > [data-atom=button]
     top: 0
