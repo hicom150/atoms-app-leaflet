@@ -7,4 +7,4 @@ Esta extensión te permitirá trabajar con el servicio OpenStreetMap de una mane
 
 - [x] ~~Attribute tile para añadir diferentes capas base~~
 - [ ] Actualizar la documentación
-- [ ] Mejorar el CSS
+- [x] ~~Mejorar el CSS~~

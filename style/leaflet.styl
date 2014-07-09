@@ -8,6 +8,10 @@
   justify-content center
   align-content center
   align-items center
+  &.full
+    position: absolute !important
+    width: 100% !important
+    height: 100% !important
   &.big
     height: 12rem
   &.small
@@ -20,23 +24,3 @@
     width: SIZE
     height: SIZE
     color: WHITE
-
-[data-atom=leaflet].full, [data-organism=section][data-extend=leaflet] > [data-atom=leaflet]
-  position: absolute !important
-  width: 100% !important
-  height: 100% !important
-
-[data-organism=section][data-extend=leaflet]
-  position: relative
-  > [data-atom=leaflet]
-    z-index: 0
-  > [data-atom=button], > [data-molecule=form]
-    z-index: 1
-    position: absolute
-  AIR = 0.75rem
-  > [data-atom=button]
-    top: 0
-    margin: AIR
-  > [data-molecule=form]
-    bottom: 0
-    padding: AIR
