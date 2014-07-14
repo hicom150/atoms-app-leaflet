@@ -19,6 +19,9 @@ class Atoms.Atom.Leaflet extends Atoms.Class.Atom
 
   @events   : ["query"]
 
+  @default  :
+    id: "leaflet"
+
   _map      : null
   _markers  : []
   _query    : []
@@ -117,6 +120,5 @@ __geocode = (value) ->
     success : (response) =>
       promise.done null, response
     error   : (response, error) =>
-      console.error error
       promise.done error, null
   promise
